@@ -1,0 +1,73 @@
+package com.Fiszki.demo.FlashCard;
+
+import com.Fiszki.demo.Deck.Deck;
+import com.Fiszki.demo.Deck.DeckDTO;
+import com.Fiszki.demo.Exception.FlashcardNotFoundException;
+import com.Fiszki.demo.Mapper.DeckMapper;
+import com.Fiszki.demo.Mapper.FlashcardMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class FlashcardService {
+
+    private final DeckMapper deckMapper;
+    private FlashcardRepository flashcardRepository;
+    private FlashcardMapper flashcardMapper;
+
+    public FlashcardService(FlashcardRepository flashcardRepository, FlashcardMapper flashcardMapper, DeckMapper deckMapper) {
+        this.flashcardRepository = flashcardRepository;
+        this.flashcardMapper = flashcardMapper;
+        this.deckMapper = deckMapper;
+    }
+
+    public void addFlashcard(FlashcardDTO flashcard) {
+        if (flashcard != null) {
+            Flashcard card = flashcardMapper.toEntity(flashcard);
+            flashcardRepository.save(card);
+        }
+    }
+
+    public void deleteFlashcard(Long id) {
+        if (id != null) {
+            flashcardRepository.deleteById(id);
+        }
+    }
+
+    public FlashcardDTO getFlashcard(Long id) {
+        return flashcardRepository.findById(id)
+                .map(flashcardMapper::toDto)
+                .orElse(null);
+    }
+
+    public List<FlashcardDTO> getAllFlashcardsByDeckId(Long deckId) {
+      List<Flashcard> flashcards = flashcardRepository.findAllByDeckId(deckId);
+
+      return flashcards
+              .stream()
+              .map(flashcardMapper::toDto)
+              .collect(Collectors.toList());
+    }
+
+    public FlashcardDTO updateFlashcard(FlashcardDTO flashcard) {
+        Flashcard card = flashcardRepository.findById(flashcard.getId())
+                .orElseThrow(() -> new FlashcardNotFoundException("Flashcard not found"));
+        if (card != null) {
+            if (flashcard.getQuestion() != null) {
+                card.setQuestion(flashcard.getQuestion());
+            }
+            if (flashcard.getOptions() != null) {
+                card.setOptions(flashcard.getOptions());
+            }
+            if (flashcard.getCorrectAnswer() != null) {
+                card.setCorrectAnswer(flashcard.getCorrectAnswer());
+            }
+            flashcardRepository.save(card);
+        }
+        return flashcardMapper.toDto(card);
+    }
+
+
+}
