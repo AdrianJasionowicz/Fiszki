@@ -24,11 +24,11 @@ public class AIService {
 
     public AIResponse generateOptions(String question, String correctAnswer) {
         try {
-            String url = "https://api.openai.com/v1/chat/completions";
+            String url = "https://api.openai.com/v1/responses";
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(apiKey);
+            headers.setBearerAuth(apiKey.trim());
 
             String prompt = """
                     Wygeneruj dokładnie 3 błędne odpowiedzi do pytania quizowego.
@@ -43,12 +43,8 @@ public class AIService {
 
             Map<String, Object> body = new HashMap<>();
             body.put("model", "gpt-4.1-mini");
-
-            List<Map<String, String>> messages = new ArrayList<>();
-            messages.add(Map.of("role", "user", "content", prompt));
-
-            body.put("messages", messages);
-            body.put("max_tokens", 100);
+            body.put("input", prompt);
+            body.put("max_output_tokens", 100);
 
             HttpEntity<Map<String, Object>> request =
                     new HttpEntity<>(body, headers);
@@ -56,11 +52,13 @@ public class AIService {
             String response = restTemplate.postForObject(url, request, String.class);
 
             JsonNode root = objectMapper.readTree(response);
+
             String content = root
-                    .path("choices")
+                    .path("output")
                     .get(0)
-                    .path("message")
                     .path("content")
+                    .get(0)
+                    .path("text")
                     .asText();
 
             String[] parts = content.split("\\|");
