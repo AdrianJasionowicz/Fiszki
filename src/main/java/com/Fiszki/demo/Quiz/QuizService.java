@@ -42,20 +42,23 @@ public class QuizService {
         List<Flashcard> flashcards = flashcardRepository.findAllByDeckId(deckId);
         Collections.shuffle(flashcards);
         int order = 1;
-
+        if (flashcards.isEmpty()) {
+            throw new RuntimeException("Deck nie ma fiszek");
+        }
     Quiz quiz = new Quiz();
     quiz.setDeck(deck);
         quiz.setTotalQuestions(flashcards.size());
     quiz.setScore(0);
     quiz.setStartTime(LocalDateTime.now());
         quiz.setStatus(QuizStatus.IN_PROGRESS);
+        quizRepository.save(quiz);
+
         for (Flashcard card : flashcards) {
             QuizQuestion qq = new QuizQuestion();
             qq.setQuiz(quiz);
             qq.setQuestionOrder(order++);
             qq.setFlashcard(card);
-            qq.setCorrectAnswer(null);
-            quizRepository.save(quiz);
+            qq.setIsCorrect(null);
             quizQuestionRepository.save(qq);
         }
 
@@ -63,13 +66,10 @@ public class QuizService {
 }
 
     public QuizQuestionDTO getNextQuestion(Long quizId) {
-        QuizQuestion question = quizQuestionRepository
-                .findFirstByQuizIdAndCorrectAnswerIsNull(quizId)
-                .orElseThrow(() -> new NoMoreQuestionsException("No more questions"));
-        if (question.getQuiz().getStatus() == QuizStatus.FINISHED) {
-            throw new QuizAlreadyFinishedException("Quiz finished");
-        }
-        return quizQuestionMapper.toDTO(question);
+        return quizQuestionRepository
+                .findFirstByQuizIdAndIsCorrectIsNull(quizId)
+                .map(quizQuestionMapper::toDTO)
+                .orElse(null);
     }
 
     @Transactional
@@ -82,12 +82,12 @@ public class QuizService {
         if (question.getChosenAnswer() != null) {
             throw new QuestionAlreadyAnsweredException("Question already answered");
         }
-        boolean correctAnswer = question.getFlashcard().getCorrectAnswer().equals(answer);
-
+        boolean correctAnswer = answer != null &&
+                answer.equals(question.getFlashcard().getCorrectAnswer());
         Quiz quiz = question.getQuiz();
 
         question.setChosenAnswer(answer);
-        question.setCorrectAnswer(correctAnswer);
+        question.setIsCorrect(correctAnswer);
 
         if (correctAnswer) {
             quiz.setScore(quiz.getScore() + 1);
@@ -101,8 +101,6 @@ public class QuizService {
     public QuizDTO finishQuiz(Long quizId) {
         Quiz quiz = quizRepository.findById(quizId)
                 .orElseThrow(() -> new QuizNotFoundException("Quiz not found"));
-
-        quiz.setFinished(true);
 
         double percent = calculatePercentage(quiz);
         quiz.setPercentage(percent);

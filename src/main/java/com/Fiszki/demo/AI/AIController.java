@@ -18,8 +18,8 @@ public class AIController {
 
 
     @PostMapping("/generate-options")
-    public String generateOptions(@RequestBody AIRequest aiRequest) {
-        return  aiService.generateOptions(
+    public AIResponse generateOptions(@RequestBody AIRequest aiRequest) {
+        return aiService.generateOptions(
                 aiRequest.getQuestion(),
                 aiRequest.getCorrectAnswer()
         );

@@ -14,5 +14,6 @@ public class FlashcardDTO {
     private String question;
     private String correctAnswer;
     private List<String> options;
+    private Long deckId;
 
 }

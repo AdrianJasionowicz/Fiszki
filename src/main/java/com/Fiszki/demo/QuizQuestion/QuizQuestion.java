@@ -7,10 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,10 +24,12 @@ public class QuizQuestion {
     private Quiz quiz;
 
     @ManyToOne
+    @JoinColumn(name = "flashcard_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Flashcard flashcard;
 
     private int questionOrder;
     private String chosenAnswer;
-    private Boolean correctAnswer;
+    private Boolean isCorrect;
 }
 

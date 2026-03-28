@@ -23,7 +23,7 @@ public class LoginUser implements UserDetails {
     private Long id;
     private String username;
     private String password;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "quizUser_id")
     private QuizUser quizUser;
     private Role role;

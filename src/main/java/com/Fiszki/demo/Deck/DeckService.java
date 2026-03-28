@@ -1,12 +1,18 @@
 package com.Fiszki.demo.Deck;
 
 import com.Fiszki.demo.Exception.DeckNotFoundException;
+import com.Fiszki.demo.FlashCard.Flashcard;
+import com.Fiszki.demo.FlashCard.FlashcardRepository;
 import com.Fiszki.demo.LoginUser.LoginUser;
 import com.Fiszki.demo.LoginUser.LoginUserRepository;
 import com.Fiszki.demo.Mapper.DeckMapper;
+import com.Fiszki.demo.Quiz.QuizRepository;
+import com.Fiszki.demo.QuizQuestion.QuizQuestion;
+import com.Fiszki.demo.QuizQuestion.QuizQuestionRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,16 +20,31 @@ import java.util.stream.Collectors;
 @Service
 public class DeckService {
     private final LoginUserRepository loginUserRepository;
+    private final FlashcardRepository flashcardRepository;
+    private final QuizQuestionRepository quizQuestionRepository;
+    private final QuizRepository quizRepository;
     private DeckMapper deckMapper;
     private DeckRepository deckRepository;
 
-    public DeckService(DeckMapper deckMapper, DeckRepository deckRepository, LoginUserRepository loginUserRepository) {
+    public DeckService(DeckMapper deckMapper, DeckRepository deckRepository, LoginUserRepository loginUserRepository, FlashcardRepository flashcardRepository, QuizQuestionRepository quizQuestionRepository, QuizRepository quizRepository) {
         this.deckMapper = deckMapper;
         this.deckRepository = deckRepository;
         this.loginUserRepository = loginUserRepository;
+        this.flashcardRepository = flashcardRepository;
+        this.quizQuestionRepository = quizQuestionRepository;
+        this.quizRepository = quizRepository;
     }
 
+    @Transactional
     public void deleteDeckById(Long id) {
+        List<Flashcard> flashcards = flashcardRepository.findAllByDeckId(id);
+        List<QuizQuestion> questions = quizQuestionRepository.findAll();
+        for (Flashcard flashcard : flashcards) {
+            quizQuestionRepository.deleteByFlashcard_Id(flashcard.getId());
+
+            flashcardRepository.deleteById(flashcard.getId());
+        }
+        quizRepository.deleteByDeck_Id(id);
         Deck deck = deckRepository.findById(id)
                 .orElseThrow(() -> new DeckNotFoundException("Deck not found"));
         deckRepository.delete(deck);

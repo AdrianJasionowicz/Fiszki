@@ -7,5 +7,7 @@ import java.util.Optional;
 
 @Repository
 public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long> {
-    Optional<QuizQuestion> findFirstByQuizIdAndCorrectAnswerIsNull(Long quizId);
+    Optional<QuizQuestion> findFirstByQuizIdAndIsCorrectIsNull(Long quizId);
+
+    void deleteByFlashcard_Id(Long flashcardId);
 }

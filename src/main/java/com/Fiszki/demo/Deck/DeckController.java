@@ -19,18 +19,21 @@ public class DeckController {
 
     @DeleteMapping("/decks/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("@deckSecurity.isOwner(#id, authentication)")
+    @PreAuthorize("@deckService.isOwner(#id, authentication)")
     public void deleteDeck(@PathVariable Long id) {
+
+
+
         deckService.deleteDeckById(id);
     }
 
     @GetMapping("/decks/{id}")
-    @PreAuthorize("@deckSecurity.isOwner(#id, authentication)")
+    @PreAuthorize("@deckService.isOwner(#id, authentication)")
     public DeckDTO getDeck(@PathVariable Long id) {
        return deckService.getDeckById(id);
     }
 
-    @GetMapping("/decks/")
+    @GetMapping("/decks")
     public List<DeckDTO> getDecksByUserId(Authentication authentication) {
         return deckService.getDecksByUserToken(authentication);
     }
@@ -43,7 +46,7 @@ public class DeckController {
     }
 
     @PutMapping("/decks/{id}")
-    @PreAuthorize("@deckSecurity.isOwner(#id, authentication)")
+    @PreAuthorize("@deckService.isOwner(#id, authentication)")
     @ResponseStatus(HttpStatus.OK)
     public void updateDeck(@PathVariable Long id, @RequestBody DeckDTO deck) {
 

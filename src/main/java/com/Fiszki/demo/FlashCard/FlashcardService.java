@@ -2,6 +2,7 @@ package com.Fiszki.demo.FlashCard;
 
 import com.Fiszki.demo.Deck.Deck;
 import com.Fiszki.demo.Deck.DeckDTO;
+import com.Fiszki.demo.Deck.DeckRepository;
 import com.Fiszki.demo.Exception.FlashcardNotFoundException;
 import com.Fiszki.demo.Mapper.DeckMapper;
 import com.Fiszki.demo.Mapper.FlashcardMapper;
@@ -16,18 +17,23 @@ public class FlashcardService {
     private final DeckMapper deckMapper;
     private FlashcardRepository flashcardRepository;
     private FlashcardMapper flashcardMapper;
+    private DeckRepository deckRepository;
 
-    public FlashcardService(FlashcardRepository flashcardRepository, FlashcardMapper flashcardMapper, DeckMapper deckMapper) {
+    public FlashcardService(FlashcardRepository flashcardRepository, FlashcardMapper flashcardMapper, DeckMapper deckMapper, DeckRepository deckRepository) {
         this.flashcardRepository = flashcardRepository;
         this.flashcardMapper = flashcardMapper;
         this.deckMapper = deckMapper;
+        this.deckRepository = deckRepository;
     }
 
     public void addFlashcard(FlashcardDTO flashcard) {
-        if (flashcard != null) {
-            Flashcard card = flashcardMapper.toEntity(flashcard);
-            flashcardRepository.save(card);
-        }
+        Deck deck = deckRepository.findById(flashcard.getDeckId())
+                .orElseThrow(() -> new RuntimeException("Deck not found"));
+        Flashcard flashcardz = flashcardMapper.toEntity(flashcard);
+        flashcardz.setOptions(flashcard.getOptions());
+        flashcardz.setDeck(deck);
+
+        flashcardRepository.save(flashcardz);
     }
 
     public void deleteFlashcard(Long id) {

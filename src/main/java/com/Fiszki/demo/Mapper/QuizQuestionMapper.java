@@ -1,15 +1,35 @@
 package com.Fiszki.demo.Mapper;
 
-
+import com.Fiszki.demo.FlashCard.Flashcard;
 import com.Fiszki.demo.QuizQuestion.QuizQuestion;
 import com.Fiszki.demo.QuizQuestion.QuizQuestionDTO;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-public interface QuizQuestionMapper {
-    QuizQuestion toEntity(QuizQuestionDTO quizQuestionDTO);
-    QuizQuestionDTO toDTO(QuizQuestion quizQuestion);
+@Component
+public class QuizQuestionMapper {
 
+    public QuizQuestionDTO toDTO(QuizQuestion qq) {
+        Flashcard card = qq.getFlashcard();
 
+        List<String> options = new ArrayList<>();
+
+        options.add(card.getCorrectAnswer());
+
+        if (card.getOptions() != null) {
+            options.addAll(card.getOptions());
+        }
+
+        Collections.shuffle(options);
+
+        return new QuizQuestionDTO(
+                qq.getId(),
+                qq.getQuiz().getId(),
+                card.getQuestion(),
+                options
+        );
+    }
 }

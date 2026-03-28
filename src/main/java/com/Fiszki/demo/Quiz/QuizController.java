@@ -1,6 +1,7 @@
 package com.Fiszki.demo.Quiz;
 
 import com.Fiszki.demo.QuizQuestion.QuizQuestionDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,18 +18,23 @@ public class QuizController {
      return quizService.startQuiz(deckId);
     }
 
-    @GetMapping("/quiz//{quizId}/next")
-    public QuizQuestionDTO getNextQuestion(@PathVariable Long quizId) {
-        return quizService.getNextQuestion(quizId);
+    @GetMapping("/quiz/{quizId}/next")
+    public ResponseEntity<?> getNextQuestion(@PathVariable Long quizId) {
+        QuizQuestionDTO dto = quizService.getNextQuestion(quizId);
+        if (dto == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping("/quiz/answer")
-    public void answerQuiz(@RequestBody AnswerRequest request) {
+    public ResponseEntity<Void> answerQuiz(@RequestBody AnswerRequest request) {
 
         quizService.answerQuestion(
                 request.getQuestionId(),
                 request.getChosenAnswer()
         );
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/quiz/finish/{quizId}")

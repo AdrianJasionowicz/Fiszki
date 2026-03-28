@@ -1,6 +1,7 @@
 package com.Fiszki.demo.FlashCard;
 
 import com.Fiszki.demo.Deck.Deck;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,6 +25,7 @@ public class Flashcard {
     private List<String> options = new ArrayList<>();
     @ManyToOne
     @JoinColumn(name = "deck_id")
+    @JsonIgnore
     private Deck deck;
 
 }

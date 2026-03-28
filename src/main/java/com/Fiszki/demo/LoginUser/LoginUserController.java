@@ -30,13 +30,13 @@ public class LoginUserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @PostMapping("/register")
+    @PostMapping("/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterModel registerModel) {
         registerUserService.registerUser(registerModel);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
         try {
             Authentication authentication = authenticationManager.authenticate(
@@ -50,6 +50,7 @@ public class LoginUserController {
                     .httpOnly(false)
                     .secure(false)
                     .sameSite("Lax")
+                    .domain("localhost")
                     .path("/")
                     .maxAge(86400)
                     .build();
