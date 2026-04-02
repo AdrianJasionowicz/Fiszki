@@ -34,14 +34,14 @@ Uruchomienie projektu
 Backend
 mvn spring-boot:run
 
-Aplikacja dostępna pod:
+Backend dostepny pod:
 http://localhost:8080
 
 Frontend
 npm install
 npm start
 
-Aplikacja dostępna pod:
+Frontend dostępna pod:
 http://localhost:3000
 
 Autor
