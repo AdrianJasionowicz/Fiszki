@@ -1,0 +1,264 @@
+/* RESET */
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f6f9;
+}
+
+/* NAVBAR */
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e293b;
+  padding: 14px 24px;
+}
+
+.nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 16px;
+  font-weight: 500;
+}
+
+.nav a:hover {
+  text-decoration: underline;
+}
+
+.logout-btn {
+  margin-left: 16px;
+  background: #ef4444;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background: #dc2626;
+}
+
+/* CONTAINER */
+.container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* HEADER (deck details) */
+.deck-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: white;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+}
+
+.deck-info h1 {
+  margin: 0 0 6px 0;
+}
+
+.deck-info p {
+  margin: 0;
+  color: #666;
+}
+
+/* ACTIONS */
+.deck-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+/* COLORS */
+.btn-primary {
+  background: #3b82f6;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #2563eb;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  color: #111;
+}
+
+.btn-secondary:hover {
+  background: #d1d5db;
+}
+
+.btn-danger {
+  background: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #dc2626;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+/* FLASHCARD */
+.flashcard {
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: 0.2s;
+}
+
+.flashcard:hover {
+  transform: translateY(-4px);
+}
+
+/* FORM CARD */
+.card {
+  background: white;
+  padding: 24px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  max-width: 420px;
+  margin: 40px auto;
+}
+
+/* INPUT */
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+input:focus {
+  border-color: #3b82f6;
+  outline: none;
+}
+
+/* BUTTON GLOBAL */
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+   margin-top: 30px;
+}
+
+/* ERROR */
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+/* TEXT */
+.center-text {
+  text-align: center;
+}
+
+/* HEADER */
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+/* CARD */
+.deck-card {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: 0.2s;
+}
+
+.deck-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ACTIONS */
+.deck-card .deck-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 10px;
+}
+/* QUIZ ANSWERS - UPGRADE */
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px; /* większe odstępy */
+  margin-top: 25px;
+}
+
+.answer-card {
+  background: #1e1e2f;
+  color: white;
+  padding: 25px; /* większe kafelki */
+  border-radius: 14px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 18px; /* większy tekst */
+  min-height: 70px; /* stała wysokość */
+}
+
+.answer-card:hover {
+  background: #2a2a40;
+  transform: scale(1.03);
+}
+
+.answer-card:active {
+  transform: scale(0.97);
+}
+
+/* zaznaczona odpowiedź */
+.answer-card.selected {
+  border: 2px solid #00c853;
+  background: #2e7d32;
+}
+
+/* litery A B C D */
+.letter {
+  font-weight: bold;
+  color: #ffd54f;
+  font-size: 20px;
+}
+
+/* większa karta quizu */
+.card {
+  max-width: 500px; /* było 420 */
+  padding: 30px;
+}
+.answer-card.selected {
+  background: linear-gradient(45deg, #2e7d32, #43a047);
+}
+.success {
+  color: green;
+  margin-top: 10px;
+  text-align: center;
+}

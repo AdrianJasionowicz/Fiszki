@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Login</h2>
+
+<input id="username" placeholder="login">
+<input id="password" type="password" placeholder="hasło">
+
+<button onclick="login()">Zaloguj</button>
+
+<script>
+const API = "http://localhost:8080";
+
+async function login() {
+  const res = await fetch(API + "/auth/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value
+    })
+  });
+
+  if (res.ok) {
+    const data = await res.json();
+    localStorage.setItem("token", data.token);
+    window.location.href = "decks.html";
+  } else {
+    alert("błąd logowania");
+  }
+}
+</script>
+
+</body>
+</html>
